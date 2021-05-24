@@ -1,3 +1,10 @@
+"""
+  Project: Homework 11.3
+  Author: 최민수
+  StudentID: 21511796
+  Date of last update: May. 23, 2021
+  Detail: 세 가지 정렬함수를 구현하고 각각 걸리는 시간을 측정하여 비교
+"""
 import random
 import time
 
