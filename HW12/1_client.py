@@ -44,16 +44,6 @@ class SocketChatting:
         self.win.destroy()
         exit()
 
-    # def connect_server(self):
-    #     self.scr_cliDisplay.insert(tk.INSERT,"Connecting to server ....")
-    #     self.myIpAddr = self.myAddr.get()
-    #     self.peerIpAddr = self.servAddr.get()
-    #     self.scr_cliDisplay.insert(tk.INSERT, "My IP Address : " + self.myIpAddr + '\n')
-    #     self.scr_cliDisplay.insert(tk.INSERT, "Server's IP Address : " + self.peerIpAddr + '\n')
-    #     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #     self.sock.connect((self.peerIpAddr, SocketChat_PortNumber))
-
-    
     def cli_send(self): # to peer/server
         msgToServer = str(self.scr_cliInput.get(1.0, END))
         self.scr_cliDisplay.insert(tk.INSERT,"<< " + msgToServer)
@@ -80,10 +70,6 @@ class SocketChatting:
         self.servAddr = tk.StringVar()
         self.servAddr_entry = ttk.Entry(frame_addr_connect, width=15, textvariable="")
         self.servAddr_entry.grid(column=1, row=1, sticky='W')
-
-        # connect_button = ttk.Button(frame_addr_connect, text="Connect", command=self.connect_server)
-        # connect_button.grid(column=3, row=1)
-        # connect_button.configure(state='enable')
 
         cliDisplay_label = ttk.Label(frame, text="Socket Client Display")
         cliDisplay_label.grid(column=0, row=1 )
