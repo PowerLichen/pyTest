@@ -24,14 +24,14 @@ class SocketChatting:
         cli_thread.start()
 
     def TCPClient(self):
-        # self.cliSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        # servAddr_str = input("Server IP Addr(e.g., '127.0.0.1)=")
-        # self.cliSock.connect((servAddr_str, SocketChat_PortNumber))
-        # servAddr = self.cliSock.getpeername()
-        # print("TCP Client is connected to server ({})\n".format(servAddr))
-        # self.scr_cliDisplay.insert(tk.INSERT,"TCP client is connected to server \n")
-        # self.scr_cliDisplay.insert(tk.INSERT,"TCP server IP address : {}\n".format(servAddr[0]) )
-        # self.servAddr_entry.insert(END, servAddr[0])
+        self.cliSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        servAddr_str = input("Server IP Addr(e.g., '127.0.0.1)=")
+        self.cliSock.connect((servAddr_str, SocketChat_PortNumber))
+        servAddr = self.cliSock.getpeername()
+        print("TCP Client is connected to server ({})\n".format(servAddr))
+        self.scr_cliDisplay.insert(tk.INSERT,"TCP client is connected to server \n")
+        self.scr_cliDisplay.insert(tk.INSERT,"TCP server IP address : {}\n".format(servAddr[0]) )
+        self.servAddr_entry.insert(END, servAddr[0])
         while True:
             cliRecvMsg = self.cliSock.recv(8192).decode()
             if not cliRecvMsg:
@@ -44,14 +44,14 @@ class SocketChatting:
         self.win.destroy()
         exit()
 
-    def connect_server(self):
-        self.scr_cliDisplay.insert(tk.INSERT,"Connecting to server ....")
-        self.myIpAddr = self.myAddr.get()
-        self.peerIpAddr = self.servAddr.get()
-        self.scr_cliDisplay.insert(tk.INSERT, "My IP Address : " + self.myIpAddr + '\n')
-        self.scr_cliDisplay.insert(tk.INSERT, "Server's IP Address : " + self.peerIpAddr + '\n')
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect((self.peerIpAddr, SocketChat_PortNumber))
+    # def connect_server(self):
+    #     self.scr_cliDisplay.insert(tk.INSERT,"Connecting to server ....")
+    #     self.myIpAddr = self.myAddr.get()
+    #     self.peerIpAddr = self.servAddr.get()
+    #     self.scr_cliDisplay.insert(tk.INSERT, "My IP Address : " + self.myIpAddr + '\n')
+    #     self.scr_cliDisplay.insert(tk.INSERT, "Server's IP Address : " + self.peerIpAddr + '\n')
+    #     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    #     self.sock.connect((self.peerIpAddr, SocketChat_PortNumber))
 
     
     def cli_send(self): # to peer/server
@@ -81,9 +81,9 @@ class SocketChatting:
         self.servAddr_entry = ttk.Entry(frame_addr_connect, width=15, textvariable="")
         self.servAddr_entry.grid(column=1, row=1, sticky='W')
 
-        connect_button = ttk.Button(frame_addr_connect, text="Connect", command=self.connect_server)
-        connect_button.grid(column=3, row=1)
-        connect_button.configure(state='enable')
+        # connect_button = ttk.Button(frame_addr_connect, text="Connect", command=self.connect_server)
+        # connect_button.grid(column=3, row=1)
+        # connect_button.configure(state='enable')
 
         cliDisplay_label = ttk.Label(frame, text="Socket Client Display")
         cliDisplay_label.grid(column=0, row=1 )
