@@ -1,4 +1,11 @@
-from sys import maxsize as PLUS_INF
+"""
+  Project: Homework 11.5
+  Author: 최민수
+  StudentID: 21511796
+  Date of last update: May. 24, 2021
+  Detail: 다익스트라 알고리즘을 사용한 최단 거리 경로 탐색을 구현
+"""
+import sys
 
 class Node(object):
     def __init__(self, name):
@@ -25,7 +32,7 @@ class WeightedEdge(Edge):
     def getWeight(self):
         return self.weight
     def __str__(self):
-        return "{:3}->({:3})->{}".format(self.src_nm, self.weight, self.dest_nm)
+        return "{:3}->{:3} ({:3})".format(self.src_nm, self.dest_nm, self.weight)
 
 class Digraph(object):
     def __init__(self):
@@ -73,28 +80,27 @@ class Digraph(object):
             eCount += 1
             if eCount % 5 == 0:
                 print()
+        print()
 
     def __str__(self):
         result = ''
         for src in self.nodes:
             for dest in self.edges[src]:
-                result = result + src.getName() + '->'\
-                    + dest.getName() + '\n'
-        return result[:-1] # omit final newline
+                result = result + src.getName() + '->' + dest.getName() + '\n'
+        return result[:-1]
 
         
 
 
 
-
+PLUS_INF = sys.maxsize
 def Dijkstra(G, start_nm, end_nm):
     errorInLoop = False
     nodeAccWeight= {}
     nodeStatus = {}
-    prevNodes_nm = {} # previous node in the path from the start to the end
+    prevNodes_nm = {}
     selectedNodes = []
     remainingNodes = []
-    wEdges = G.getWEdges()
 
     for node_nm in G.node_names:
         e = Edge(start_nm, node_nm)
@@ -141,7 +147,8 @@ def Dijkstra(G, start_nm, end_nm):
                     prevNodes_nm[rn] = minNode
                 if minNode == end_nm:
                     break
-                count += 1
+            remainingNodes.remove(minNode)
+        count += 1
     
     if errorInLoop == True:
         return None
@@ -154,8 +161,6 @@ def Dijkstra(G, start_nm, end_nm):
             cur_node_nm = prevNodes_nm[cur_node_nm]
             path.insert(0,cur_node_nm)
     return path, nodeAccWeight[end_nm]
-
-
 
 
 def initGraph(G):
@@ -188,8 +193,6 @@ def initGraph(G):
         G.addEdge(we)
     return G
 
-
-
 def main():
     G = Digraph()
     initGraph(G) # inserts nodes and edges into Digraph G
@@ -214,5 +217,6 @@ def main():
     path_Dijkstra, path_cost = Dijkstra(G, "BS", "SL")
     print("ShortestPath_Dijkstra ({} -> {}): {}, path_cost ={}"\
     .format("BS", "SL", path_Dijkstra, path_cost))
+
 if __name__ == "__main__":
     main()
