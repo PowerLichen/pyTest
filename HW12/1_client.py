@@ -1,13 +1,21 @@
+"""
+  Project: Homework 12.1
+  Author: 최민수
+  StudentID: 21511796
+  Date of last update: May. 31, 2021
+  Detail: 파이썬 스레드 기반의 채팅 프로그램. 서버 사이드를 구현
+"""
+
 import socket, sys, threading
-from threading import Thread # for testing multi-thread
-from time import sleep #for sleep in thread
+from threading import Thread
+from time import sleep
 import tkinter as tk
 from tkinter import ttk, scrolledtext, END
 
-LocalHost = "127.0.0.1"
 SocketChat_PortNumber = 24000
 
 class SocketChatting:
+    #초기 설정
     def __init__(self, mode):
         global hostAddr
         self.win = tk.Tk()
@@ -23,6 +31,7 @@ class SocketChatting:
         cli_thread = Thread(target=self.TCPClient, daemon=True)
         cli_thread.start()
 
+    #클라이언트 TCP 연결
     def TCPClient(self):
         self.cliSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         servAddr_str = input("Server IP Addr(e.g., '127.0.0.1)=")
@@ -39,27 +48,20 @@ class SocketChatting:
             self.scr_cliDisplay.insert(tk.INSERT,">> " + cliRecvMsg)
         self.cliSock.close()
 
+    #종료
     def _quit(self):
         self.win.quit()
         self.win.destroy()
         exit()
-
-    # def connect_server(self):
-    #     self.scr_cliDisplay.insert(tk.INSERT,"Connecting to server ....")
-    #     self.myIpAddr = self.myAddr.get()
-    #     self.peerIpAddr = self.servAddr.get()
-    #     self.scr_cliDisplay.insert(tk.INSERT, "My IP Address : " + self.myIpAddr + '\n')
-    #     self.scr_cliDisplay.insert(tk.INSERT, "Server's IP Address : " + self.peerIpAddr + '\n')
-    #     self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    #     self.sock.connect((self.peerIpAddr, SocketChat_PortNumber))
-
     
+    # 메시지 전송
     def cli_send(self): # to peer/server
         msgToServer = str(self.scr_cliInput.get(1.0, END))
         self.scr_cliDisplay.insert(tk.INSERT,"<< " + msgToServer)
         self.cliSock.send(bytes(msgToServer.encode()))
         self.scr_cliInput.delete('1.0', END)
 
+    #클라이언트 GUI 구성
     def createWidgets(self):
         frame = ttk.LabelFrame(self.win, text="Frame (Socket-based Text Message Chatting)")
         frame.grid(column=0, row=0, padx=8, pady=4)
@@ -80,10 +82,6 @@ class SocketChatting:
         self.servAddr = tk.StringVar()
         self.servAddr_entry = ttk.Entry(frame_addr_connect, width=15, textvariable="")
         self.servAddr_entry.grid(column=1, row=1, sticky='W')
-
-        # connect_button = ttk.Button(frame_addr_connect, text="Connect", command=self.connect_server)
-        # connect_button.grid(column=3, row=1)
-        # connect_button.configure(state='enable')
 
         cliDisplay_label = ttk.Label(frame, text="Socket Client Display")
         cliDisplay_label.grid(column=0, row=1 )
