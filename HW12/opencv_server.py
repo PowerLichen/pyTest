@@ -22,7 +22,7 @@ def recvall(sock, count):
         count -= len(newbuf)
     return buf
 
-def video_sendto_client(client_socket, addr, queue):
+def video_sendto_client(client_socket, queue):
     while True:
         try:
             if not queue.empty():
@@ -63,7 +63,6 @@ def video_recvfrom_client(client_socket):
 
 if __name__ == "__main__":
     enclosure_queue = Queue()
-    enclosure_queue2 = Queue()
     serverAddr = '127.0.0.1'
     PORT = 9999
     hostname = socket.gethostname()
@@ -79,7 +78,7 @@ if __name__ == "__main__":
     print('Server::Waitint for client .... ')
     client_socket, addr = server_socket.accept()
     print('Server::connected to ({} : {})'.format(client_socket, addr))
-    start_new_thread(video_sendto_client, (client_socket, addr, enclosure_queue,))
+    start_new_thread(video_sendto_client, (client_socket, enclosure_queue,))
 
     while True:
         length = recvall(client_socket, 16)
