@@ -1,10 +1,18 @@
+"""
+  Project: Homework 12.2
+  Author: 최민수
+  StudentID: 21511796
+  Date of last update: May. 31, 2021
+  Detail: 파이썬 스레드 기반의 화상 채팅 프로그램. 클라이언트 사이드를 구현
+"""
+
 import socket
 import numpy as np
 import cv2
 from queue import Queue
 from _thread import *
 
-CLIENT_WEBCAM = 1
+CLIENT_WEBCAM = 0
 
 def recvall(sock, count):
     buf = b''
@@ -56,18 +64,17 @@ def video_recvfrom_server(client_socket):
             break
 
 if __name__ == "__main__":
-    serverAddr = "192.168.35.13"
+    serverAddr = "127.0.0.1"
     PORT = 9999
     enclosure_queue = Queue()
-    enclosure_queue2 = Queue()
-    #serverAddr = input("Input Server IP address = ")
+    serverAddr = input("Input Server IP address = ")
     print('Client::Connecting to Server')
     client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
     client_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     client_socket.connect((serverAddr, PORT))
     print('Client::Connected to Server({}:{})'.format(serverAddr, PORT))
-    start_new_thread(video_chat_client, (enclosure_queue2,))
-    start_new_thread(video_sendto_server, (client_socket, enclosure_queue2,))
+    start_new_thread(video_chat_client, (enclosure_queue,))
+    start_new_thread(video_sendto_server, (client_socket, enclosure_queue,))
     
     while True:
         length = recvall(client_socket, 16)
