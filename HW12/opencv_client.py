@@ -16,6 +16,7 @@ def recvall(sock, count):
     return buf
 
 def video_sendto_server(client_socket, queue):
+    print("Start video_sendto_server")
     while True:
         try:
             if not queue.empty():
@@ -24,9 +25,10 @@ def video_sendto_server(client_socket, queue):
                 client_socket.send(stringData)
         except ConnectionResetError as e:
             break
-        client_socket.close()
+    client_socket.close()
 
 def video_chat_client(queue):
+    print("Start video_chat_client")
     client_webcam = cv2.VideoCapture(CLIENT_WEBCAM)
     while True:
         ret, frame = client_webcam.read()
@@ -35,27 +37,40 @@ def video_chat_client(queue):
         encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 90]
         result, imgencode = cv2.imencode('.jpg', frame, encode_param)
         img_data = np.array(imgencode)
-        stringData = img_data.tobytes()
+        stringData = img_data.tostring()
         queue.put(stringData)
         cv2.imshow('Client::Client_Video', frame)
         key = cv2.waitKey(1)
         if key == 27:
             break
 
+def video_recvfrom_server(client_socket):
+    while True:
+        length = recvall(client_socket, 16)
+        stringData = recvall(client_socket, int(length))
+        data = np.frombuffer(stringData, dtype='uint8')
+        decimg = cv2.imdecode(data, 1)
+        cv2.imshow('Client::Received from Server', decimg)
+        key = cv2.waitKey(1)
+        if key == 27:
+            break
+
 if __name__ == "__main__":
-    serverAddr = "127.0.0.1"
+    serverAddr = "192.168.35.13"
     PORT = 9999
     enclosure_queue = Queue()
+    enclosure_queue2 = Queue()
     #serverAddr = input("Input Server IP address = ")
     print('Client::Connecting to Server')
     client_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    client_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     client_socket.connect((serverAddr, PORT))
     print('Client::Connected to Server({}:{})'.format(serverAddr, PORT))
-    start_new_thread(video_chat_client, (enclosure_queue,))
-    start_new_thread(video_sendto_server, (client_socket, enclosure_queue,))
-
+    start_new_thread(video_chat_client, (enclosure_queue2,))
+    start_new_thread(video_sendto_server, (client_socket, enclosure_queue2,))
+    
     while True:
-        length = recvall (client_socket, 16)
+        length = recvall(client_socket, 16)
         stringData = recvall(client_socket, int(length))
         data = np.frombuffer(stringData, dtype='uint8')
         decimg=cv2.imdecode(data,1)
