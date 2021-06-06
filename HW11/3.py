@@ -95,7 +95,7 @@ def printListSample(L, size, per_line, sample_line):
 def sortAndCompare(L, size):
     # 선택 정렬
     if(size <= 50000):
-        temp_L = L
+        temp_L = L[:]
         print("Before Selection-Sort of A :")
         printListSample(temp_L, size, 10, 3)
         t1 = time.time()
@@ -107,7 +107,7 @@ def sortAndCompare(L, size):
         print()
     
     # 병합 정렬
-    temp_L = L
+    temp_L = L[:]
     print("Before mergeSort of A :")
     printListSample(temp_L, size, 10, 3)
     t1 = time.time()
@@ -119,7 +119,7 @@ def sortAndCompare(L, size):
     print()
 
     # 퀵 정렬
-    temp_L = L
+    temp_L = L[:]
     print("Before quickSort of A :")
     printListSample(temp_L, size, 10, 3)
     t1 = time.time()

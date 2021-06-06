@@ -1,0 +1,192 @@
+<html>
+
+<head>
+    <meta charset="UTF‐8">
+    <title>Web‐based Remote Control</title>
+    <meta name="viewport" content="width=200, initial‐scale=1, maximum‐scale=1">
+</head>
+<script type="text/javascript">
+    function rc_post(value) {
+        var req_post = new XMLHttpRequest();
+        var cmd_msg = "command=" + value;
+        req_post.open('POST', '/remote_control', false);
+        // 'false' makes the request synchronous
+        req_post.setRequestHeader('Content‐Type', 'application/x‐www‐form‐urlencoded');
+        req_post.setRequestHeader('Content‐Length', cmd_msg.length);
+        req_post.setRequestHeader('Connection', 'close');
+        req_post.send(cmd_msg);
+        document.getElementById('rc_cmd').innerHTML = value;
+        var res_msg = req_post.responseText;
+        //alert("rc_post (" + value + ")_result = " + res_msg);
+        document.getElementById('rc_result').innerHTML = res_msg;
+    }
+</script>
+<script type="text/javascript">
+    function rc_put(value) {
+        var req_put = new XMLHttpRequest();
+        var rc_cmd = "put_value=" + value;
+        //alert("rc_put (" + value + ") invoked => rc_cmd = (" + rc_cmd + ")" );
+        req_put.open('PUT', '/remote_control', false);
+        // 'false' makes the request synchronous
+        req_put.setRequestHeader('Content‐Type', 'application/x‐www‐form‐urlencoded');
+        req_put.setRequestHeader('Content‐Length', rc_cmd.length);
+        req_put.setRequestHeader('Connection', 'close');
+        req_put.send(rc_cmd);
+        document.getElementById('rc_cmd').innerHTML = value;
+        var res_msg = req_put.responseText;
+        //alert("rc_put (" + value + ")_result = " + res_msg);
+        document.getElementById('rc_result').innerHTML = res_msg;
+    }
+</script>
+<script type="text/javascript">
+    function Remote_Drawing_Shape() {
+        //alert("Remote_Drawing_Shape")
+        var radio_btn = document.getElementsByName("remote_drawing_shape")
+        var radio_btn_check = 0;
+        var selected_shape;
+        for (var i = 0; i < radio_btn.length; i++) {
+            if (radio_btn[i].checked == true) {
+                selected_shape = radio_btn[i].value;
+            }
+        }
+        document.getElementById('remote_drawing_shape').innerHTML = selected_shape;
+        //alert("remote_drawing_shape (" + selected_shape + ")")
+        var req_post = new XMLHttpRequest();
+        var remote_drawing_cmd = "remote_drawing_shape=" + selected_shape;
+        req_post.open('POST', '/remote_drawing_shape', false);
+        // 'false' makes the request synchronous
+        req_post.setRequestHeader('Content‐Type', 'application/x‐www‐form‐urlencoded');
+        req_post.setRequestHeader('Content‐Length', remote_drawing_cmd.length);
+        req_post.setRequestHeader('Connection', 'close');
+        req_post.send(remote_drawing_cmd);
+
+        var res_msg = req_post.responseText;
+        //alert("remote_drawing_shape_(" + selected_shape + ")_result => "
+        // + res_msg);
+    }
+</script>
+<script type="text/javascript">
+    function Remote_RGB_Color_Set() {
+        var req_post = new XMLHttpRequest();
+        var rgb_value = document.getElementById('RGB_value').innerHTML
+        var rc_rgb_cmd = "rgb_value=" + rgb_value;
+        //alert("RGB_btn () invoked => rc_rgb_cmd = (" + rc_rgb_cmd + ")" );
+        req_post.open('POST', '/remote_drawing_color', false);
+        // 'false' makes the request synchronous
+        req_post.setRequestHeader('Content‐Type', 'application/x‐www‐form‐urlencoded');
+        req_post.setRequestHeader('Content‐Length', rc_rgb_cmd.length);
+        req_post.setRequestHeader('Connection', 'close');
+        req_post.send(rc_rgb_cmd);
+        document.getElementById('rc_rgb_cmd').innerHTML = rgb_value;
+        var res_msg = req_post.responseText;
+        //alert("RGB_btn_(" + rgb_value + ")_result => " + res_msg);
+    }
+</script>
+<script type="text/javascript">
+    function Update_RGB_value() {
+        //alert("Update_RGB_valued ()")
+        var rd = document.getElementById('RGB_red_value').innerHTML;
+        var gr = document.getElementById('RGB_green_value').innerHTML;
+        var bl = document.getElementById('RGB_blue_value').innerHTML;
+        var rgb = rd + " " + gr + " " + bl
+        //alert("Update_RGB_valued (" + rgb + ")")
+        document.getElementById('RGB_value').innerHTML = rgb
+    }
+</script>
+<script type="text/javascript">
+    function Set_RGB_Red(value) {
+        //alert("Set_RGB_Red (" + value + ")")
+        document.getElementById('RGB_red_value').innerHTML = value
+        Update_RGB_value()
+    }
+</script>
+<script type="text/javascript">
+    function Set_RGB_Green(value) {
+        //alert("Set_RGB_Green (" + value + ")")
+        document.getElementById('RGB_green_value').innerHTML = value
+        Update_RGB_value()
+    }
+</script>
+<script type="text/javascript">
+    function Set_RGB_Blue(value) {
+        //alert("Set_RGB_Blue (" + value + ")")
+        document.getElementById('RGB_blue_value').innerHTML = value
+        Update_RGB_value()
+    }
+</script>
+
+<body>
+    <H2>Control Buttons</H2>
+    <div align="left" stype="margin:0 0 10px 10px">
+        <ul>
+            <input type="button" style="font‐size:20pt;" width:70;height:60 value="RC_POST" onClick="rc_post('RC_POST');">
+            <input type="button" style="font‐size:20pt;" width:70;height:60 value="RC_GET" onClick="rc_get('RC_GET');">
+            <input type="button" style="font‐size:20pt;" width:70;height:60 value="RC_PUT" onClick="rc_put('RC_PUT');">
+        </ul>
+    </div>
+    <H2>Execution Resuts</H2>
+    <div>
+        <ul>
+            <H3> rc_cmd = <span id="rc_cmd"> Initial_None </span> </H3>
+            <H3> rc_result = <span id="rc_result"> Initial_None </span> </H3>
+        </ul>
+    </div>
+    <H2>Shape Selection with Radio Buttons</H2>
+    <div>
+        <ul>
+            <input type="radio" id="triangle" name="remote_drawing_shape" value="triangle" checked>
+            <lable for="triangle">Triangle</label>
+                <input type="radio" id="rectangle" name="remote_drawing_shape" value="rectangle">
+                <lable for="rectangle">Rectangle</label>
+                    <input type="radio" id="oval" name="remote_drawing_shape" value="oval">
+                    <lable for="oval">Oval</label>
+        </ul>
+    </div>
+    <div>
+        <ul>
+            <input type="button" style="font‐size:10pt;" width:70;height:60 value="Remote_Drawing_Shape"
+                onClick="Remote_Drawing_Shape();">
+        </ul>
+    </div>
+    <H2>Execution Resuts</H2>
+    <div>
+        <ul>
+            <H3> Selected remote drawing shape = <span id="remote_drawing_shape">
+                    Initial_None </span> </H3>
+        </ul>
+    </div>
+    <H2>RGB Color Selection with Range</H2>
+    <div>
+        <ul>
+            <label for="Red"> Red : </label>
+            <input type="range" id="red" name="RGB_red_value" min="0" max="255“
+        value=" 0" onchange="Set_RGB_Red(this.value);">
+            <label for="value"> value ( <span id="RGB_red_value"> 0 </span> ) </label>
+        </ul>
+        <ul>
+            <lable for="green">Green : </label>
+                <input type="range" id="green" name="RGB_green_value" min="0" max="255" value="0"
+                    onchange="Set_RGB_Green(this.value);">
+                <label for="value"> value ( <span id="RGB_green_value"> 0 </span> )
+                </label>
+        </ul>
+        <ul>
+            <lable for="blue">Blue : </label>
+                <input type="range" id="blue" name="RGB_blue_value" min="0" max="255“
+            value=" 0" onchange="Set_RGB_Blue(this.value);">
+                <label for="value"> value ( <span id="RGB_blue_value"> 0 </span> ) </label>
+        </ul>
+        <ul>
+            <input type="button" style=font‐size:10pt; width:70;height:60 value="Remote_Drawing_RGB_Color_Setting"
+                onClick="Remote_RGB_Color_Set();">
+        </ul>
+    </div>
+    <H2>Execution Resuts</H2>
+    <div>
+        <ul>
+            <H3> RGB_value = <span id="RGB_value"> 0 0 0 </span> </H3>
+        </ul>
+    </div>
+</body>
+
+</html>
