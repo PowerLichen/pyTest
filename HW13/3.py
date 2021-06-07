@@ -12,7 +12,7 @@ import socket
 from queue import Queue
 from _thread import *
 from bottle import route, run, get, post, response, static_file, request
-from Remote_controlled_drawing import *
+#from remote_pygame import *
 Port_Num = 18080
 hostname = socket.gethostname()
 hostAddr = socket.gethostbyname(hostname)
@@ -74,7 +74,7 @@ def rc_PUT():
 
 @route('/remote_drawing_shape', method='POST')
 def remote_drawing_shape_POST():
-    shape_name = request.forms.get('remote_drawing_shape')
+    shape_name = request.forms.getter('remote_drawing_shape')
     print("Web Server::remote_drawing shape({}) was invoked ...".format(shape_name))
     msg_to_rc_drawing = "change_shape " + shape_name
     sock_conn.send(bytes(msg_to_rc_drawing.encode()))

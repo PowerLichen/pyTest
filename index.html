@@ -50,7 +50,7 @@
             }
         }
         document.getElementById('remote_drawing_shape').innerHTML = selected_shape;
-        //alert("remote_drawing_shape (" + selected_shape + ")")
+        alert("remote_drawing_shape (" + selected_shape + ")")
         var req_post = new XMLHttpRequest();
         var remote_drawing_cmd = "remote_drawing_shape=" + selected_shape;
         req_post.open('POST', '/remote_drawing_shape', false);
